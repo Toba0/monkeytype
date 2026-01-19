@@ -369,6 +369,7 @@ export function getErrorMessage(error: unknown): string | undefined {
 }
 
 export function createErrorMessage(error: unknown, message: string): string {
+  console.log("error", error);
   const errorMessage = getErrorMessage(error);
 
   if (errorMessage === undefined) {

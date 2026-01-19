@@ -95,7 +95,7 @@ export default function AsyncContent<T>(
       else={
         <ErrorBoundary fallback={errorText}>
           <Show when={props.asyncStore?.state().error !== undefined}>
-            {errorText}
+            {errorText(props.asyncStore?.state().error)}
           </Show>
 
           <Conditional
