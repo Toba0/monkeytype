@@ -1,29 +1,57 @@
-import { ErrorBoundary, JSXElement, Resource, Show, Suspense } from "solid-js";
+import {
+  createMemo,
+  ErrorBoundary,
+  JSXElement,
+  Resource,
+  Show,
+} from "solid-js";
 
 import * as Notifications from "../../elements/notifications";
+import { AsyncStore } from "../../stores/utils/asyncStore";
 import { createErrorMessage } from "../../utils/misc";
 
 import { Conditional } from "./Conditional";
 
 export default function AsyncContent<T>(
   props: {
-    resource: Resource<T | undefined>;
     errorMessage?: string;
   } & (
     | {
-        alwaysShowContent?: never;
-        children: (data: T) => JSXElement;
+        resource: Resource<T | undefined>;
+        asyncStore?: never;
       }
     | {
-        alwaysShowContent: true;
-        showLoader?: true;
-        children: (data: T | undefined) => JSXElement;
+        asyncStore: AsyncStore<T | undefined>;
+        resource?: never;
       }
-  ),
+  ) &
+    (
+      | {
+          alwaysShowContent?: never;
+          children: (data: T) => JSXElement;
+        }
+      | {
+          alwaysShowContent: true;
+          showLoader?: true;
+          children: (data: T | undefined) => JSXElement;
+        }
+    ),
 ): JSXElement {
+  const source = createMemo(() =>
+    props.resource !== undefined
+      ? {
+          value: () => props.resource(),
+          loading: () => props.resource.loading,
+        }
+      : {
+          value: () => props.asyncStore.store,
+          loading: () => props.asyncStore.state().loading,
+        },
+  );
+
   const value = () => {
     try {
-      return props.resource();
+      return source().value();
     } catch (err) {
       const message = createErrorMessage(
         err,
@@ -35,9 +63,19 @@ export default function AsyncContent<T>(
     }
   };
   const handleError = (err: unknown): string => {
-    console.error(err);
+    console.error("AsyncContext failed", err);
     return createErrorMessage(err, props.errorMessage ?? "An error occurred");
   };
+
+  const loader: JSXElement = (
+    <div class="preloader">
+      <i class="fas fa-fw fa-spin fa-circle-notch"></i>
+    </div>
+  );
+
+  const errorText = (err: unknown): JSXElement => (
+    <div class="error">{handleError(err)}</div>
+  );
 
   return (
     <Conditional
@@ -49,32 +87,30 @@ export default function AsyncContent<T>(
         };
         return (
           <>
-            <Show when={p.showLoader && props.resource.loading}>
-              <div class="preloader text-main p-4 text-center text-2xl">
-                <i class="fas fa-fw fa-spin fa-circle-notch"></i>
-              </div>
-            </Show>
+            <Show when={p.showLoader && source().loading()}>{loader}</Show>
             {p.children(value())}
           </>
         );
       })()}
       else={
-        <ErrorBoundary
-          fallback={(err) => <div class="error">{handleError(err)}</div>}
-        >
-          <Suspense
-            fallback={
-              <div class="preloader text-main p-4 text-center text-2xl">
-                <i class="fas fa-fw fa-spin fa-circle-notch"></i>
-              </div>
+        <ErrorBoundary fallback={errorText}>
+          <Show when={props.asyncStore?.state().error !== undefined}>
+            {errorText}
+          </Show>
+
+          <Conditional
+            if={source().loading()}
+            then={loader}
+            else={
+              <Show
+                when={
+                  source().value() !== null && source().value() !== undefined
+                }
+              >
+                {props.children(source().value() as T)}
+              </Show>
             }
-          >
-            <Show
-              when={props.resource() !== null && props.resource() !== undefined}
-            >
-              {props.children(props.resource() as T)}
-            </Show>
-          </Suspense>
+          />
         </ErrorBoundary>
       }
     />
