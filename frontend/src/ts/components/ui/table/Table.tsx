@@ -5,17 +5,24 @@ import { cn } from "../../../utils/cn";
 
 const Table: Component<ComponentProps<"table">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <table class={cn("", local.class)} {...others} />;
+  return (
+    <table
+      class={cn("w-full border-separate border-spacing-0", local.class)}
+      {...others}
+    />
+  );
 };
 
 const TableHeader: Component<ComponentProps<"thead">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <thead class={cn("", local.class)} {...others} />;
+  return (
+    <thead class={cn("text-xs [&>tr]:bg-none", local.class)} {...others} />
+  );
 };
 
 const TableBody: Component<ComponentProps<"tbody">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <tbody class={cn("", local.class)} {...others} />;
+  return <tbody class={cn("[&>tr]:odd:bg-sub-alt", local.class)} {...others} />;
 };
 
 const TableFooter: Component<ComponentProps<"tfoot">> = (props) => {
@@ -25,7 +32,15 @@ const TableFooter: Component<ComponentProps<"tfoot">> = (props) => {
 
 const TableRow: Component<ComponentProps<"tr">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <tr class={cn("", local.class)} {...others} />;
+  return (
+    <tr
+      class={cn(
+        "[&>td]:first:rounded-l-md [&>td]:last:rounded-r-md",
+        local.class,
+      )}
+      {...others}
+    />
+  );
 };
 
 const TableHead: Component<ComponentProps<"th">> = (props) => {
@@ -33,7 +48,7 @@ const TableHead: Component<ComponentProps<"th">> = (props) => {
   return (
     <th
       aria-label={local["aria-label"]}
-      class={cn("", local.class)}
+      class={cn("m-2 appearance-none text-xs", local.class)}
       {...others}
     />
   );
@@ -41,7 +56,9 @@ const TableHead: Component<ComponentProps<"th">> = (props) => {
 
 const TableCell: Component<ComponentProps<"td">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <td {...others} class={cn("", local.class)} />;
+  return (
+    <td class={cn("appearance-none p-2 text-xs", local.class)} {...others} />
+  );
 };
 
 const TableCaption: Component<ComponentProps<"caption">> = (props) => {
