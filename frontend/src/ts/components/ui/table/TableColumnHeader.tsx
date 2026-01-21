@@ -27,19 +27,19 @@ export function TableColumnHeader<TData, TValue>(
         role="button"
         onClick={local.column.getToggleSortingHandler()}
         class={cn(
-          "text-sub hover:bg-sub-alt m-0 flex h-full w-full cursor-pointer items-start justify-start rounded-none border-0 bg-transparent p-2 text-left font-normal",
+          "text-sub hover:bg-sub-alt box-border flex h-full w-full cursor-pointer items-start justify-start rounded-none border-0 bg-transparent p-2 text-left font-normal whitespace-nowrap",
           local.class,
         )}
         {...others}
       >
         {local.title}
 
-        <Switch fallback={<i class="fas fw" aria-hidden="true"></i>}>
+        <Switch fallback={<i class="fas fa-fw" aria-hidden="true"></i>}>
           <Match when={local.column.getIsSorted() === "asc"}>
-            <i class="fas fw fa-sort-up" aria-hidden="true"></i>
+            <i class="fas fa-fw fa-sort-up" aria-hidden="true"></i>
           </Match>
           <Match when={local.column.getIsSorted() === "desc"}>
-            <i class="fas fw fa-sort-down" aria-hidden="true"></i>
+            <i class="fas fa-fw fa-sort-down" aria-hidden="true"></i>
           </Match>
         </Switch>
       </button>

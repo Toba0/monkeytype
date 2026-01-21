@@ -64,7 +64,11 @@ const columns = [
 
   columnHelper.accessor("lastModified", {
     header: (props) => (
-      <TableColumnHeader column={props.column} title="friends for" />
+      <TableColumnHeader
+        column={props.column}
+        title="friends for"
+        class="whitespace-nowrap"
+      />
     ),
     enableSorting: true,
     cell: ({ getValue }) =>
@@ -115,7 +119,11 @@ const columns = [
 
   columnHelper.accessor("timeTyping", {
     header: (props) => (
-      <TableColumnHeader column={props.column} title="time typing" />
+      <TableColumnHeader
+        column={props.column}
+        title="time typing"
+        class="whitespace-nowrap"
+      />
     ),
     enableSorting: true,
     cell: ({ getValue }) =>
@@ -151,7 +159,7 @@ const columns = [
       return (
         <>
           {pb?.wpm ?? "-"}
-          <div>{pb?.acc ?? "-"}</div>
+          <div class="opacity-50">{pb?.acc ?? "-"}</div>
         </>
       );
     },
@@ -174,7 +182,7 @@ const columns = [
       return (
         <>
           {pb?.wpm ?? "-"}
-          <div>{pb?.acc ?? "-"}</div>
+          <div class="opacity-50">{pb?.acc ?? "-"}</div>
         </>
       );
     },

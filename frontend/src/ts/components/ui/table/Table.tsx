@@ -34,10 +34,7 @@ const TableRow: Component<ComponentProps<"tr">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
   return (
     <tr
-      class={cn(
-        "[&>td]:first:rounded-l-md [&>td]:last:rounded-r-md",
-        local.class,
-      )}
+      class={cn("[&>td]:first:rounded-l [&>td]:last:rounded-r", local.class)}
       {...others}
     />
   );
@@ -48,7 +45,7 @@ const TableHead: Component<ComponentProps<"th">> = (props) => {
   return (
     <th
       aria-label={local["aria-label"]}
-      class={cn("m-2 appearance-none text-xs", local.class)}
+      class={cn("appearance-none p-0 text-xs", local.class)}
       {...others}
     />
   );
