@@ -11,6 +11,8 @@ import AsyncContent from "../common/AsyncContent";
 import { Button } from "../common/Button";
 import { ChartJs } from "../common/ChartJs";
 
+import { FriendsList } from "./friends/FriendsList";
+
 function H2(props: { icon: string; text: string }): JSXElement {
   return (
     <h2 class="text-sub flex place-items-center gap-4 pb-4 text-4xl">
@@ -56,6 +58,9 @@ export function AboutPage(): JSXElement {
           <a href="#contributors_title">expanded</a> by many awesome people.
           <br />
           Launched on 15th of May, 2020.
+        </section>
+        <section>
+          <FriendsList />
         </section>
         <section>
           <AsyncContent
