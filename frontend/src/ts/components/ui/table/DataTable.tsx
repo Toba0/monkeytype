@@ -52,80 +52,77 @@ export function DataTable<TData>(
   });
 
   return (
-    <div class="rounded-md border">
-      <Table>
-        <TableHeader>
-          <For each={table.getHeaderGroups()}>
-            {(headerGroup) => (
-              <TableRow>
-                <For each={headerGroup.headers}>
-                  {(header) => (
-                    <TableHead
-                      colSpan={header.colSpan}
-                      aria-sort={
-                        header.column.getIsSorted() === "asc"
-                          ? "ascending"
-                          : header.column.getIsSorted() === "desc"
-                            ? "descending"
-                            : "none"
-                      }
-                    >
-                      <Show when={!header.isPlaceholder}>
+    <Table>
+      <TableHeader>
+        <For each={table.getHeaderGroups()}>
+          {(headerGroup) => (
+            <TableRow>
+              <For each={headerGroup.headers}>
+                {(header) => (
+                  <TableHead
+                    colSpan={header.colSpan}
+                    aria-sort={
+                      header.column.getIsSorted() === "asc"
+                        ? "ascending"
+                        : header.column.getIsSorted() === "desc"
+                          ? "descending"
+                          : "none"
+                    }
+                  >
+                    <Show when={!header.isPlaceholder}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                    </Show>
+                  </TableHead>
+                )}
+              </For>
+            </TableRow>
+          )}
+        </For>
+      </TableHeader>
+      <TableBody>
+        <Show
+          when={table.getRowModel().rows?.length}
+          fallback={
+            <TableRow>
+              <TableCell
+                colSpan={props.columns.length}
+                class="h-24 text-center"
+              >
+                No results.
+              </TableCell>
+            </TableRow>
+          }
+        >
+          <For each={table.getRowModel().rows}>
+            {(row) => (
+              <TableRow data-state={row.getIsSelected() && "selected"}>
+                <For each={row.getVisibleCells()}>
+                  {(cell) => {
+                    const cellMeta =
+                      typeof cell.column.columnDef.meta?.cellMeta === "function"
+                        ? cell.column.columnDef.meta.cellMeta({
+                            value: cell.getValue(),
+                            row: cell.row.original,
+                          })
+                        : (cell.column.columnDef.meta?.cellMeta ?? {});
+                    return (
+                      <TableCell {...cellMeta}>
                         {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
                         )}
-                      </Show>
-                    </TableHead>
-                  )}
+                      </TableCell>
+                    );
+                  }}
                 </For>
               </TableRow>
             )}
           </For>
-        </TableHeader>
-        <TableBody>
-          <Show
-            when={table.getRowModel().rows?.length}
-            fallback={
-              <TableRow>
-                <TableCell
-                  colSpan={props.columns.length}
-                  class="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            }
-          >
-            <For each={table.getRowModel().rows}>
-              {(row) => (
-                <TableRow data-state={row.getIsSelected() && "selected"}>
-                  <For each={row.getVisibleCells()}>
-                    {(cell) => {
-                      const cellMeta =
-                        typeof cell.column.columnDef.meta?.cellMeta ===
-                        "function"
-                          ? cell.column.columnDef.meta.cellMeta({
-                              value: cell.getValue(),
-                              row: cell.row.original,
-                            })
-                          : (cell.column.columnDef.meta?.cellMeta ?? {});
-                      return (
-                        <TableCell {...cellMeta}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      );
-                    }}
-                  </For>
-                </TableRow>
-              )}
-            </For>
-          </Show>
-        </TableBody>
-      </Table>
-    </div>
+        </Show>
+      </TableBody>
+    </Table>
   );
 }

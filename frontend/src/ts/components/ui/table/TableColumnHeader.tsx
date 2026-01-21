@@ -26,10 +26,7 @@ export function TableColumnHeader<TData, TValue>(
         type="button"
         role="button"
         onClick={local.column.getToggleSortingHandler()}
-        class={cn(
-          "flex h-full w-full cursor-pointer items-center justify-between bg-transparent text-left hover:bg-green-300",
-          local.class,
-        )}
+        class={cn("flex", local.class)}
         {...others}
       >
         {local.title}
