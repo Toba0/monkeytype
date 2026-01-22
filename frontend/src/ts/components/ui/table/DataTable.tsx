@@ -1,5 +1,4 @@
 import {
-  AccessorFnColumnDef,
   AccessorKeyColumnDef,
   ColumnDef,
   createSolidTable,
@@ -8,7 +7,9 @@ import {
   getSortedRowModel,
   SortingState,
 } from "@tanstack/solid-table";
-import { createSignal, For, JSXElement, Show } from "solid-js";
+import { createMemo, createSignal, For, JSXElement, Show } from "solid-js";
+
+import { bp } from "../../../signals/breakpoints";
 
 import {
   Table,
@@ -21,7 +22,7 @@ import {
 
 export type AnyColumnDef<TData, TValue> =
   | ColumnDef<TData, TValue>
-  | AccessorFnColumnDef<TData, TValue>
+  //  | AccessorFnColumnDef<TData, TValue>
   | AccessorKeyColumnDef<TData, TValue>;
 
 type DataTableProps<TData, TValue> = {
@@ -34,6 +35,23 @@ export function DataTable<TData>(
   props: DataTableProps<TData, any>,
 ): JSXElement {
   const [sorting, setSorting] = createSignal<SortingState>([]);
+  const columnVisibility = createMemo(() => {
+    const current = bp();
+    const result = Object.fromEntries(
+      props.columns.map((col) => {
+        //fill missing columnIds, otherwise hidinc columns will not work
+        if (col.id === undefined) {
+          if ("accessorKey" in col) {
+            col.id = col.accessorKey as string;
+          }
+        }
+        return [col.id as string, current[col.meta?.breakpoint ?? "xxs"]];
+      }),
+    );
+
+    return result;
+  });
+
   const table = createSolidTable<TData>({
     get data() {
       return props.data;
@@ -47,6 +65,9 @@ export function DataTable<TData>(
     state: {
       get sorting() {
         return sorting();
+      },
+      get columnVisibility() {
+        return columnVisibility();
       },
     },
   });

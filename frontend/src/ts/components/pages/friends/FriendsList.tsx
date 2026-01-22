@@ -104,6 +104,7 @@ const columns = [
     enableSorting: true,
     cell: (info) => `${info.getValue()}/${info.row.original.startedTests}`,
     meta: {
+      breakpoint: "lg",
       cellMeta: ({ row }) => {
         const testStats = formatTypingStatsRatio(row);
 
@@ -128,6 +129,9 @@ const columns = [
     enableSorting: true,
     cell: ({ getValue }) =>
       secondsToString(Math.round(getValue() ?? 0), true, true),
+    meta: {
+      breakpoint: "sm",
+    },
   }),
 
   columnHelper.accessor("streak.length", {
@@ -137,6 +141,7 @@ const columns = [
     enableSorting: true,
     cell: ({ getValue }) => formatStreak(getValue()),
     meta: {
+      breakpoint: "lg",
       cellMeta: ({ row }) => {
         const value = row.streak.maxLength as number | undefined;
         return value === undefined
@@ -164,6 +169,7 @@ const columns = [
       );
     },
     meta: {
+      breakpoint: "md",
       cellMeta: ({ row }) => ({
         "data-balloon-pos": "down",
         "data-balloon-break": "",
@@ -187,6 +193,7 @@ const columns = [
       );
     },
     meta: {
+      breakpoint: "md",
       cellMeta: ({ row }) => ({
         "data-balloon-pos": "down",
         "data-balloon-break": "",
