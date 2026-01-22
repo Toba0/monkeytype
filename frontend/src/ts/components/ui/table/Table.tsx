@@ -22,7 +22,15 @@ const TableHeader: Component<ComponentProps<"thead">> = (props) => {
 
 const TableBody: Component<ComponentProps<"tbody">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return <tbody class={cn("[&>tr]:odd:bg-sub-alt", local.class)} {...others} />;
+  return (
+    <tbody
+      class={cn(
+        "[&>tr]:odd:bg-sub-alt text-xs md:text-sm lg:text-base",
+        local.class,
+      )}
+      {...others}
+    />
+  );
 };
 
 const TableFooter: Component<ComponentProps<"tfoot">> = (props) => {
@@ -56,9 +64,7 @@ const TableHead: Component<ComponentProps<"th">> = (props) => {
 
 const TableCell: Component<ComponentProps<"td">> = (props) => {
   const [local, others] = splitProps(props, ["class"]);
-  return (
-    <td class={cn("appearance-none p-2 text-xs", local.class)} {...others} />
-  );
+  return <td class={cn("appearance-none p-2", local.class)} {...others} />;
 };
 
 const TableCaption: Component<ComponentProps<"caption">> = (props) => {

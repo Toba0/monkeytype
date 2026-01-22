@@ -143,7 +143,7 @@ const columns = [
     enableSorting: true,
     cell: ({ getValue }) => formatStreak(getValue()),
     meta: {
-      breakpoint: "md",
+      breakpoint: "sm",
       cellMeta: ({ row }) => {
         const value = row.streak.maxLength as number | undefined;
         return value === undefined
