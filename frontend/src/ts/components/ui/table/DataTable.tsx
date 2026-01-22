@@ -7,8 +7,10 @@ import {
   getSortedRowModel,
   SortingState,
 } from "@tanstack/solid-table";
-import { createMemo, createSignal, For, JSXElement, Show } from "solid-js";
+import { createMemo, For, JSXElement, Show } from "solid-js";
+import { z } from "zod";
 
+import { useLocalStorage } from "../../../hooks/useLocalStorage";
 import { bp } from "../../../signals/breakpoints";
 
 import {
@@ -20,12 +22,20 @@ import {
   TableRow,
 } from "./Table";
 
+const SortingStateSchema = z.array(
+  z.object({
+    desc: z.boolean(),
+    id: z.string(),
+  }),
+);
+
 export type AnyColumnDef<TData, TValue> =
   | ColumnDef<TData, TValue>
   //  | AccessorFnColumnDef<TData, TValue>
   | AccessorKeyColumnDef<TData, TValue>;
 
 type DataTableProps<TData, TValue> = {
+  id: string;
   columns: AnyColumnDef<TData, TValue>[];
   data: TData[];
 };
@@ -34,7 +44,22 @@ export function DataTable<TData>(
   // oxlint-disable-next-line typescript/no-explicit-any
   props: DataTableProps<TData, any>,
 ): JSXElement {
-  const [sorting, setSorting] = createSignal<SortingState>([]);
+  const [sorting, setSorting] = useLocalStorage<SortingState>({
+    key: props.id + "Sort",
+    schema: SortingStateSchema,
+    fallback: [],
+    //migrate old state from sorted-table
+    migrate: (value: Record<string, unknown> | unknown[]) =>
+      typeof value === "object" && "property" in value && "descending" in value
+        ? [
+            {
+              id: value["property"] as string,
+              desc: value["descending"] as boolean,
+            },
+          ]
+        : [],
+  });
+
   const columnVisibility = createMemo(() => {
     const current = bp();
     const result = Object.fromEntries(

@@ -141,7 +141,7 @@ const columns = [
     enableSorting: true,
     cell: ({ getValue }) => formatStreak(getValue()),
     meta: {
-      breakpoint: "lg",
+      breakpoint: "md",
       cellMeta: ({ row }) => {
         const value = row.streak.maxLength as number | undefined;
         return value === undefined
@@ -169,7 +169,7 @@ const columns = [
       );
     },
     meta: {
-      breakpoint: "md",
+      breakpoint: "lg",
       cellMeta: ({ row }) => ({
         "data-balloon-pos": "down",
         "data-balloon-break": "",
@@ -193,7 +193,7 @@ const columns = [
       );
     },
     meta: {
-      breakpoint: "md",
+      breakpoint: "lg",
       cellMeta: ({ row }) => ({
         "data-balloon-pos": "down",
         "data-balloon-break": "",
@@ -218,7 +218,7 @@ export function FriendsList(): JSXElement {
     <>
       <h2>Friends</h2>
       <AsyncContent resource={friendsListResource}>
-        {(data) => <DataTable columns={columns} data={data} />}
+        {(data) => <DataTable id="friendsList" columns={columns} data={data} />}
       </AsyncContent>
     </>
   );
