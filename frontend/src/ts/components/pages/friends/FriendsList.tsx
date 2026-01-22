@@ -21,6 +21,7 @@ import { getXpDetails } from "../../../utils/levels";
 import { formatTypingStatsRatio } from "../../../utils/misc";
 import { getLanguageDisplayString } from "../../../utils/strings";
 import AsyncContent from "../../common/AsyncContent";
+import { Button } from "../../common/Button";
 import { DataTable } from "../../ui/table/DataTable";
 import { TableColumnHeader } from "../../ui/table/TableColumnHeader";
 
@@ -55,14 +56,15 @@ const FriendName = (props: {
 };
 
 const columnHelper = createColumnHelper<Friend>();
+const defineColumn = columnHelper.accessor;
 const columns = [
-  columnHelper.accessor("name", {
+  defineColumn("name", {
     header: (props) => <TableColumnHeader column={props.column} title="name" />,
     enableSorting: true,
     cell: ({ row }) => <FriendName friend={row.original} />,
   }),
 
-  columnHelper.accessor("lastModified", {
+  defineColumn("lastModified", {
     header: (props) => (
       <TableColumnHeader
         column={props.column}
@@ -84,7 +86,7 @@ const columns = [
     },
   }),
 
-  columnHelper.accessor("xp", {
+  defineColumn("xp", {
     header: (props) => (
       <TableColumnHeader column={props.column} title="level" />
     ),
@@ -92,7 +94,7 @@ const columns = [
     cell: ({ getValue }) => getXpDetails(getValue() ?? 0).level,
   }),
 
-  columnHelper.accessor("completedTests", {
+  defineColumn("completedTests", {
     header: (props) => (
       <TableColumnHeader
         column={props.column}
@@ -118,7 +120,7 @@ const columns = [
     },
   }),
 
-  columnHelper.accessor("timeTyping", {
+  defineColumn("timeTyping", {
     header: (props) => (
       <TableColumnHeader
         column={props.column}
@@ -134,7 +136,7 @@ const columns = [
     },
   }),
 
-  columnHelper.accessor("streak.length", {
+  defineColumn("streak.length", {
     header: (props) => (
       <TableColumnHeader column={props.column} title="streak" />
     ),
@@ -154,7 +156,7 @@ const columns = [
     },
   }),
 
-  columnHelper.accessor("top15.wpm", {
+  defineColumn("top15.wpm", {
     header: (props) => (
       <TableColumnHeader column={props.column} title="time 15 pb" />
     ),
@@ -178,7 +180,7 @@ const columns = [
     },
   }),
 
-  columnHelper.accessor("top60.wpm", {
+  defineColumn("top60.wpm", {
     header: (props) => (
       <TableColumnHeader column={props.column} title="time 60 pb" />
     ),
@@ -200,6 +202,25 @@ const columns = [
         "aria-label": formatPb(row.top60)?.details,
       }),
     },
+  }),
+
+  defineColumn("connectionId", {
+    header: "",
+    cell: ({ getValue, row }) =>
+      //check the row is our own user
+      getValue() !== undefined ? (
+        <Button
+          onClick={() => {
+            alert(
+              `remove friend ${row.original.name} with connectionId ${getValue()}`,
+            );
+          }}
+          icon="fas fa-user-times"
+          fixedWidthIcon
+        />
+      ) : (
+        ""
+      ),
   }),
 ];
 
